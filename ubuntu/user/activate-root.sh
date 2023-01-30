@@ -5,9 +5,10 @@ sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 
 # Enable root login
 sudo sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+sudo sed -i 's/#PermitRootLogin/PermitRootLogin/g' /etc/ssh/sshd_config
 
 # Restart ssh service to apply changes
-sudo systemctl restart ssh
+sudo systemctl restart sshd
 
 while :
 do
