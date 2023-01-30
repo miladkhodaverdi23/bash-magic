@@ -1,25 +1,16 @@
 #!/bin/bash
 
-# Check if the current user is not root
-if [ "$(id -u)" != "0" ]; then
-  echo "This script must be run as root" 1>&2
-  exit 1
-fi
+# Backup the original ssh configuration file
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 
-# Enable the root user
-echo "Enabling the root user..."
-passwd root
+# Enable root login
+sudo sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
 
-# Allow root user to log in via SSH
-echo "Allowing root user to log in via SSH..."
+# Restart ssh service to apply changes
+sudo systemctl restart ssh
 
-# Backup the original sshd_config file
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+# Change root password
+echo "Changing root password"
+sudo passwd root
 
-# Edit the /etc/ssh/sshd_config file
-sed -i 's/^PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# Restart the ssh service to apply the changes
-systemctl restart ssh
-
-echo "The root user is now enabled and can log in via SSH."
+echo "Root user has been activated and password has been set. Please log in using root user and the new password."
